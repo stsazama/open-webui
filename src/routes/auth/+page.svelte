@@ -118,8 +118,11 @@
 			await signInHandler();
 		} else if ($config?.features.enable_login_form === false && $config?.oauth?.providers && Object.keys($config.oauth.providers).length === 1) {
 			// only one login option, redirect there
+			console.log("Doing SSO redirect");
+			console.log($page.url.hash);
 			let providerName = Object.keys($config.oauth.providers).find(provider => $config.oauth.providers[provider]);
 			await goto(`/oauth/${providerName}/login`);
+			console.log("After SSO redirect");
 		} else {
 			onboarding = $config?.onboarding ?? false;
 		}
