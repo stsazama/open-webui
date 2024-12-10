@@ -2614,6 +2614,7 @@ async def get_app_config(request: Request):
                     "enable_image_generation": images_app.state.config.ENABLED,
                     "enable_community_sharing": webui_app.state.config.ENABLE_COMMUNITY_SHARING,
                     "enable_message_rating": webui_app.state.config.ENABLE_MESSAGE_RATING,
+                    "model_download_max_size": webui_app.state.config.MODEL_DOWNLOAD_MAX_SIZE,
                     "enable_admin_export": ENABLE_ADMIN_EXPORT,
                     "enable_admin_chat_access": ENABLE_ADMIN_CHAT_ACCESS,
                 }

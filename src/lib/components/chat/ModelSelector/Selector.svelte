@@ -12,7 +12,7 @@
 
 	import { deleteModel, getOllamaVersion, pullModel } from '$lib/apis/ollama';
 
-	import { user, MODEL_DOWNLOAD_POOL, models, mobile, temporaryChatEnabled } from '$lib/stores';
+	import { user, MODEL_DOWNLOAD_POOL, models, mobile, temporaryChatEnabled, config } from '$lib/stores';
 	import { toast } from 'svelte-sonner';
 	import { capitalizeFirstLetter, sanitizeResponseContent, splitStream } from '$lib/utils';
 	import { getModels } from '$lib/apis';
@@ -118,6 +118,8 @@
 				}
 			});
 
+			let maxSize = $config?.features.model_download_max_size;
+
 			while (true) {
 				try {
 					const { value, done } = await reader.read();
@@ -134,6 +136,11 @@
 							}
 							if (data.detail) {
 								throw data.detail;
+							}
+							//let modelDownloadMaxSize = 2000
+							console.log(maxSize);
+							if (data.total > maxSize * 1000000) {
+								throw new Error(`Model size of "${Math.round(data.total / 1000000)}" MB exceeds the current limit ("${maxSize}" MB)`);
 							}
 
 							if (data.status) {
