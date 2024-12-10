@@ -139,7 +139,7 @@
 							}
 							//let modelDownloadMaxSize = 2000
 							console.log(maxSize);
-							if (data.total > maxSize * 1000000) {
+							if (maxSize !== 0 && data.total > maxSize * 1000000) {
 								throw new Error(`Model size of "${Math.round(data.total / 1000000)}" MB exceeds the current limit ("${maxSize}" MB)`);
 							}
 
