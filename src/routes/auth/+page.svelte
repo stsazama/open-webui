@@ -116,7 +116,7 @@
 		loaded = true;
 		if (($config?.features.auth_trusted_header ?? false) || $config?.features.auth === false) {
 			await signInHandler();
-		} else if ($config?.features.enable_login_form === false && $config?.oauth?.providers && Object.keys($config.oauth.providers).length === 1) {
+		} else if (!localStorage.token && $config?.features.enable_login_form === false && $config?.oauth?.providers && Object.keys($config.oauth.providers).length === 1) {
 			// only one login option, redirect there
 			console.log("Doing SSO redirect");
 			console.log($page.url.hash);
