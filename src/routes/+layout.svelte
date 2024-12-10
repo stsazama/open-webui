@@ -142,7 +142,14 @@
 					} else {
 						// Redirect Invalid Session User to /auth Page
 						localStorage.removeItem('token');
-						await goto('/auth');
+						if ($config?.features.enable_login_form === false && $config?.oauth?.providers && Object.keys($config.oauth.providers).length === 1) {
+							// only one login option, redirect there
+							console.log("Doing SSO redirect");
+							let providerName = Object.keys($config.oauth.providers).find(provider => $config.oauth.providers[provider]);
+							await goto(`/oauth/${providerName}/login`);
+						} else {
+						    await goto('/auth');
+						}
 					}
 				} else {
 					// Don't redirect if we're already on the auth page
