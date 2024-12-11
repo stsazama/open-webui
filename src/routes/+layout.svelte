@@ -156,9 +156,11 @@
 						}
 					}
 				} else {
+				    console.log("Reached else");
 					// Don't redirect if we're already on the auth page
 					// Needed because we pass in tokens from OAuth logins via URL fragments
 					if ($page.url.pathname !== '/auth') {
+					    console.log("Goto /auth again");
 						await goto('/auth');
 					}
 				}
