@@ -125,6 +125,7 @@
 			await config.set(backendConfig);
 			await WEBUI_NAME.set(backendConfig.name);
 
+			console.log("Testing layout script...");
 			if ($config) {
 				setupSocket();
 
@@ -135,6 +136,7 @@
 						return null;
 					});
 
+					console.log("Checking session");
 					if (sessionUser) {
 						// Save Session User to Store
 						await user.set(sessionUser);
@@ -142,12 +144,14 @@
 					} else {
 						// Redirect Invalid Session User to /auth Page
 						localStorage.removeItem('token');
+						console.log("Removed token");
 						if ($config?.features.enable_login_form === false && $config?.oauth?.providers && Object.keys($config.oauth.providers).length === 1) {
 							// only one login option, redirect there
 							console.log("Doing SSO redirect");
 							let providerName = Object.keys($config.oauth.providers).find(provider => $config.oauth.providers[provider]);
 							await goto(`/oauth/${providerName}/login`);
 						} else {
+						    console.log("Not doing SSO redirect");
 						    await goto('/auth');
 						}
 					}
