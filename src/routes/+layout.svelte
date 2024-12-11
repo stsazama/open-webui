@@ -161,7 +161,15 @@
 					// Needed because we pass in tokens from OAuth logins via URL fragments
 					if ($page.url.pathname !== '/auth') {
 					    console.log("Goto /auth again");
-						await goto('/auth');
+                        if ($config?.features.enable_login_form === false && $config?.oauth?.providers && Object.keys($config.oauth.providers).length === 1) {
+                            // only one login option, redirect there
+                            console.log("Doing SSO redirect from /auth");
+                            let providerName = Object.keys($config.oauth.providers).find(provider => $config.oauth.providers[provider]);
+                            await goto(`/oauth/${providerName}/login`);
+                        } else {
+					        console.log("Goto /auth again again");
+						    await goto('/auth');
+						}
 					}
 				}
 			}
