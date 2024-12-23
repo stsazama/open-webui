@@ -84,6 +84,16 @@
 		});
 	};
 
+	function handleLoginRedirect(config) {
+		if (config?.features.enable_login_form === false && config?.oauth?.providers && Object.keys(config.oauth.providers).length === 1) {
+			// only one login option, redirect there
+			let providerName = Object.keys(config.oauth.providers).find(provider => config.oauth.providers[provider]);
+			return goto(`/oauth/${providerName}/login`);
+		} else {
+			return goto('/auth');
+		}
+	}
+
 	onMount(async () => {
 		theme.set(localStorage.theme);
 
@@ -144,22 +154,13 @@
 					} else {
 						// Redirect Invalid Session User to /auth Page
 						localStorage.removeItem('token');
-						console.log("Removed token");
-						if ($config?.features.enable_login_form === false && $config?.oauth?.providers && Object.keys($config.oauth.providers).length === 1) {
-							// only one login option, redirect there
-							console.log("Doing SSO redirect");
-							let providerName = Object.keys($config.oauth.providers).find(provider => $config.oauth.providers[provider]);
-							await goto(`/oauth/${providerName}/login`);
-						} else {
-						    console.log("Not doing SSO redirect");
-						    await goto('/auth');
-						}
+						await handleLoginRedirect($config);
 					}
 				} else {
 					// Don't redirect if we're already on the auth page
 					// Needed because we pass in tokens from OAuth logins via URL fragments
 					if ($page.url.pathname !== '/auth') {
-						await goto('/auth');
+						await handleLoginRedirect($config);
 					}
 				}
 			}
