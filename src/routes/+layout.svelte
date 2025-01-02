@@ -153,6 +153,16 @@
 		}
 	};
 
+	function handleLoginRedirect(config) {
+		if (config?.features.enable_login_form === false && config?.oauth?.providers && Object.keys(config.oauth.providers).length === 1) {
+			// only one login option, redirect there
+			let providerName = Object.keys(config.oauth.providers).find(provider => config.oauth.providers[provider]);
+			return goto(`/oauth/${providerName}/login`);
+		} else {
+			return goto('/auth');
+		}
+	}
+
 	onMount(async () => {
 		theme.set(localStorage.theme);
 
@@ -194,6 +204,7 @@
 			await config.set(backendConfig);
 			await WEBUI_NAME.set(backendConfig.name);
 
+			console.log("Testing layout script...");
 			if ($config) {
 				await setupSocket($config.features?.enable_websocket ?? true);
 
@@ -204,6 +215,7 @@
 						return null;
 					});
 
+					console.log("Checking session");
 					if (sessionUser) {
 						// Save Session User to Store
 						$socket.emit('user-join', { auth: { token: sessionUser.token } });
@@ -216,13 +228,13 @@
 					} else {
 						// Redirect Invalid Session User to /auth Page
 						localStorage.removeItem('token');
-						await goto('/auth');
+						await handleLoginRedirect($config);
 					}
 				} else {
 					// Don't redirect if we're already on the auth page
 					// Needed because we pass in tokens from OAuth logins via URL fragments
 					if ($page.url.pathname !== '/auth') {
-						await goto('/auth');
+						await handleLoginRedirect($config);
 					}
 				}
 			}
