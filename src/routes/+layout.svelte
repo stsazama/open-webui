@@ -204,7 +204,6 @@
 			await config.set(backendConfig);
 			await WEBUI_NAME.set(backendConfig.name);
 
-			console.log("Testing layout script...");
 			if ($config) {
 				await setupSocket($config.features?.enable_websocket ?? true);
 
@@ -215,7 +214,6 @@
 						return null;
 					});
 
-					console.log("Checking session");
 					if (sessionUser) {
 						// Save Session User to Store
 						$socket.emit('user-join', { auth: { token: sessionUser.token } });
