@@ -904,6 +904,12 @@ ENABLE_MESSAGE_RATING = PersistentConfig(
     os.environ.get("ENABLE_MESSAGE_RATING", "True").lower() == "true",
 )
 
+MODEL_DOWNLOAD_MAX_SIZE = PersistentConfig(
+    "MODEL_DOWNLOAD_MAX_SIZE",
+    "ui.model_download_max_size",
+    int(os.environ.get("MODEL_DOWNLOAD_MAX_SIZE", "0")),
+)
+
 
 def validate_cors_origins(origins):
     for origin in origins:
