@@ -180,6 +180,11 @@
 						error = error.message;
 					}
 
+					// Abort the download
+					if (controller) {
+						controller.abort();
+					}
+
 					toast.error(error);
 					// opts.callback({ success: false, error, modelName: opts.modelName });
 					break;
